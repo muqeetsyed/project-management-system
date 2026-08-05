@@ -1,0 +1,55 @@
+services:
+  database:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: pms
+      POSTGRES_USER: pms
+      POSTGRES_PASSWORD: pms
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pms -d pms"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./docker/php
+    volumes:
+      - ./backend:/app
+    environment:
+      DATABASE_URL: "postgresql://pms:pms@database:5432/pms?serverVersion=16&charset=utf8"
+      APP_ENV: dev
+      CORS_ALLOW_ORIGIN: "^https?://localhost:5174$$"
+    depends_on:
+      database:
+        condition: service_healthy
+
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./backend:/app
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "8000:80"
+    depends_on:
+      - backend
+
+  frontend:
+    image: node:22-alpine
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    command: sh -c "npm install && npm run dev -- --host"
+    ports:
+      - "5174:5173"
+    environment:
+      VITE_API_URL: "http://localhost:8000"
+    depends_on:
+      - nginx
+
+volumes:
+  db_data:
