@@ -18,6 +18,12 @@ No local PHP, Composer, or PostgreSQL install needed — everything runs in cont
 ## Running
 
 ```bash
+make install     # build images, start services, run migrations
+```
+
+Or with Docker Compose directly:
+
+```bash
 docker compose up -d --build
 ```
 
@@ -34,21 +40,33 @@ The frontend calls `/api/health` on load and shows the API + database connection
 
 ## Common commands
 
+Everything is wrapped in the `Makefile`. Run `make` (or `make help`) for the full list.
+
 ```bash
-# Symfony console (e.g. doctrine migrations)
-docker compose exec backend php bin/console <command>
+make up                          # start services
+make down                        # stop and remove containers
+make down-v                      # also wipe the Postgres volume
+make logs                        # tail all logs (also logs-backend, logs-frontend, logs-nginx)
 
-# Create a migration after adding/editing entities in backend/src/Entity
-docker compose exec backend php bin/console make:migration
-docker compose exec backend php bin/console doctrine:migrations:migrate
+make console c="debug:router"    # any Symfony console command
+make cache-clear
 
-# Frontend package install (after adding dependencies)
-docker compose exec frontend npm install
+make migration                   # generate a migration from entity changes
+make migrate                     # apply pending migrations
+make db-reset                    # drop, recreate, migrate
+make fixtures                    # load Doctrine fixtures
 
-# Tear down
-docker compose down          # stop and remove containers
-docker compose down -v       # also wipe the Postgres volume
+make composer-require p="symfony/uid"
+make npm-add p="react-router"
+make lint                        # oxlint on the frontend
+make typecheck
+
+make sh-backend                  # shell into a container (also sh-frontend)
+make psql                        # psql session on the pms database
+make health                      # curl the API health endpoint
 ```
+
+Add `TTY=-T` when running non-interactively (CI, piped output), e.g. `make TTY=-T migrate`.
 
 ## Project layout
 
@@ -59,5 +77,6 @@ project-management-system/
 ├── docker/
 │   ├── php/          # PHP-FPM Dockerfile
 │   └── nginx/        # Nginx site config
-└── docker-compose.yml
+├── docker-compose.yml
+└── Makefile          # task runner — `make help`
 ```
