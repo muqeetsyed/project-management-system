@@ -13,3 +13,4 @@ Write-ups documenting significant pieces of work on this project — what was do
 - [2026-08-05 — Initial project setup](2026-08-05-initial-project-setup.md)
 - [2026-08-06 — Makefile task runner, and getting API Platform to serve](2026-08-06-makefile-and-api-platform.md)
 - [2026-08-06 — Project and Task entities, and the Symfony ideas behind them](2026-08-06-project-and-task-entities.md)
+- [2026-08-10 — Opening the write path on the Project API resource](2026-08-10-project-api-write-path.md)
