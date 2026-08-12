@@ -67,9 +67,21 @@ class Task
         return $this->completed;
     }
 
+    /**
+     * Owns the completed/completedAt pair so the two can never disagree.
+     *
+     * Only a genuine change of state touches the timestamp: every write maps
+     * the whole object, so re-setting the current value must leave an existing
+     * completedAt alone rather than re-stamping it to now.
+     */
     public function setCompleted(bool $completed): static
     {
+        if ($completed === $this->completed) {
+            return $this;
+        }
+
         $this->completed = $completed;
+        $this->completedAt = $completed ? new \DateTimeImmutable() : null;
 
         return $this;
     }
