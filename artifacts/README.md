@@ -16,3 +16,4 @@ Write-ups documenting significant pieces of work on this project — what was do
 - [2026-08-10 — Opening the write path on the Project API resource](2026-08-10-project-api-write-path.md)
 - [2026-08-12 — Editing and deleting projects](2026-08-12-project-api-edit-delete.md)
 - [2026-08-12 — Seeding real data with Doctrine fixtures](2026-08-12-data-fixtures.md)
+- [2026-08-16 — Functional tests for the Project API](2026-08-16-functional-api-tests.md)
