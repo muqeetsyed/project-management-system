@@ -159,6 +159,17 @@ typecheck: ## Type-check the frontend
 frontend-build: ## Production build of the frontend
 	$(FRONTEND) npm run build
 
+##@ Testing
+
+.PHONY: test
+test: ## Run the PHPUnit suite: make test a="--filter testPostCreatesProject"
+	$(BACKEND) php bin/phpunit $(a)
+
+.PHONY: test-db
+test-db: ## Create and migrate the test database
+	$(CONSOLE) --env=test doctrine:database:create --if-not-exists
+	$(CONSOLE) --env=test doctrine:migrations:migrate --no-interaction
+
 ##@ Utilities
 
 .PHONY: health
