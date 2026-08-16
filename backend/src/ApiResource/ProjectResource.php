@@ -13,6 +13,7 @@ use ApiPlatform\Metadata\Post;
 use App\Entity\Project;
 use App\Enum\ProjectStatus;
 use Symfony\Component\ObjectMapper\Attribute\Map;
+use Symfony\Component\ObjectMapper\Condition\TargetClass;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
@@ -40,6 +41,6 @@ class ProjectResource {
     public ProjectStatus $status = ProjectStatus::Active;
 
     #[ApiProperty(writable: false)]
-    #[Map(if: false)]
+    #[Map(if: new TargetClass(ProjectResource::class))]
     public ?\DateTimeImmutable $createdAt = null;
 }
