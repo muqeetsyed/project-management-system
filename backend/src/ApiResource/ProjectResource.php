@@ -16,8 +16,8 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\QueryParameter;
 use App\Entity\Project;
 use App\Enum\ProjectStatus;
+use App\ObjectMapper\TaskRelationTransformer;
 use Symfony\Component\ObjectMapper\Attribute\Map;
-use Symfony\Component\ObjectMapper\Condition\TargetClass;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
@@ -29,7 +29,7 @@ use Symfony\Component\Validator\Constraints as Assert;
                     filter: new SortFilter(),
                     property: 'createdAt'
                 ),
-                'status' => new QueryParameter(
+                'id' => new QueryParameter(
                     filter: new ExactFilter(),
                 ),
                 'name' => new QueryParameter(
@@ -43,7 +43,8 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Delete(),
     ],
     stateOptions: new Options(entityClass: Project::class),
-    paginationItemsPerPage: 2
+    paginationItemsPerPage: 2,
+    normalizationContext: ['skip_null_values' => false],
 )]
 #[Map(target: Project::class)]
 class ProjectResource {
@@ -64,4 +65,13 @@ class ProjectResource {
         description: 'This shows the time project is created'
     )]
     public \DateTimeImmutable $createdAt;
+
+    /**
+     * @var TaskResource[]
+     */
+    #[ApiProperty(
+        writable: false
+    )]
+    #[Map(transform: TaskRelationTransformer::class)]
+    public array $tasks = [];
 }

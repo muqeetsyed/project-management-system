@@ -14,6 +14,7 @@ use App\Entity\Task;
 use App\ObjectMapper\ProjectRelationTransformer;
 use Symfony\Component\ObjectMapper\Attribute\Map;
 use Symfony\Component\ObjectMapper\Condition\TargetClass;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
