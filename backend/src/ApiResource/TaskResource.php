@@ -49,14 +49,13 @@ class TaskResource
      * mapping to the read direction — an unconditional `if: false` would also
      * hide the field in responses.
      */
-    #[ApiProperty(writable: false)]
-    #[Map(if: new TargetClass(TaskResource::class))]
+    #[ApiProperty(writable: false, readable: true)]
     public ?\DateTimeImmutable $completedAt = null;
 
     /**
      * Sent as an IRI: {"project": "/api/projects/1"}.
      */
-    #[Assert\NotNull]
     #[Map(transform: ProjectRelationTransformer::class)]
-    public ?ProjectResource $project = null;
+    public ProjectResource $project;
+
 }
